@@ -41,26 +41,29 @@ private:
         glClearColor(0.5f, 0.8f, 0.7f, 1.f);
         glEnable(GL_DEPTH_TEST);
         const char *vertShaderSrc =
-                "attribute vec3 aPosition;"
-                "attribute vec4 aNormal;"
-                "uniform mat4 uMvpMatrix;"
-                "uniform mat4 uNormalMatrix;"
-                "varying vec4 vColor;"
-                "void main()"
-                "{"
-                "    gl_Position = uMvpMatrix * vec4(aPosition, 1.0);"
-                "    vec3 lightDirection = normalize(vec3(0.0, 0.5, 0.7));"
+                "#version 330 core\n"
+                "in vec3 aPosition;\n"
+                "in vec4 aNormal;\n"
+                "uniform mat4 uMvpMatrix;\n"
+                "uniform mat4 uNormalMatrix;\n"
+                "out vec4 vColor;\n"
+                "void main()\n"
+                "{\n"
+                "    gl_Position = uMvpMatrix * vec4(aPosition, 1.0);\n"
+                "    vec3 lightDirection = normalize(vec3(0.0, 0.5, 0.7));\n"
                 "    vec4 color = vec4(1.0, 0.4, 0.0, 1.0);"
-                "    vec3 normal = normalize((uNormalMatrix * aNormal).xyz);"
-                "    float nDotL = max(dot(normal, lightDirection), 0.0);"
-                "    vColor = vec4(color.rgb * nDotL + vec3(0.1), color.a);"
-                "}";
+                "    vec3 normal = normalize((uNormalMatrix * aNormal).xyz);\n"
+                "    float nDotL = max(dot(normal, lightDirection), 0.0);\n"
+                "    vColor = vec4(color.rgb * nDotL + vec3(0.1), color.a);\n"
+                "}\n";
         const char *fragShaderSrc =
-                "varying vec4 vColor;"
-                "void main()"
+                "#version 330 core\n"
+                "in vec4 vColor;\n"
+                "out vec4 fragColor;\n"
+                "void main()\n"
                 "{"
-                "    gl_FragColor = vColor;"
-                "}";
+                "    fragColor = vColor;\n"
+                "}\n";
         m_program.addShaderFromSourceCode(QOpenGLShader::Vertex, vertShaderSrc);
         m_program.addShaderFromSourceCode(QOpenGLShader::Fragment, fragShaderSrc);
         m_program.link();
